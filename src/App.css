@@ -1,0 +1,88 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-lime {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(200, 255, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(200, 255, 0, 0);
+  }
+}
+
+@keyframes scrollLine {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.animate-fadeInUp-delay-1 {
+  animation: fadeInUp 0.8s ease 0.15s both;
+}
+
+.animate-fadeInUp-delay-2 {
+  animation: fadeInUp 0.8s ease 0.3s both;
+}
+
+.animate-fadeInUp-delay-3 {
+  animation: fadeInUp 0.8s ease 0.45s both;
+}
+
+.scroll-indicator {
+  animation: scrollLine 2s ease-in-out infinite;
+}
+
+.ticker-track {
+  animation: ticker 20s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c8ff00;
+}
+
+/* FB iframe fix */
+.fb-embed-wrapper {
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.fb-embed-wrapper iframe {
+  display: block;
+}
