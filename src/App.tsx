@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import { Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import './App.css'
+
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+}
 
 /* ─────────────────────────────── CONSTANTS ─────────────────────────────── */
 const FB_PAGE = 'https://www.facebook.com/wetlookbmxclothing'
@@ -59,7 +64,7 @@ function EmailOptions({ compact = false }: { compact?: boolean }) {
     {
       label: 'Default',
       href: `mailto:${EMAIL}?subject=${subject}`,
-      color: '#c8ff00',
+      color: '#50E050',
       icon: (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -75,13 +80,13 @@ function EmailOptions({ compact = false }: { compact?: boolean }) {
           onClick={() => setOpen(o => !o)}
           className="group flex items-center gap-4 text-left w-full"
         >
-          <div className="w-11 h-11 bg-[#c8ff00] flex items-center justify-center shrink-0">
+          <div className="w-11 h-11 bg-[#50E050] flex items-center justify-center shrink-0">
             <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
           <div>
-            <span className="text-white font-semibold group-hover:text-[#c8ff00] transition-colors block">
+            <span className="text-white font-semibold group-hover:text-[#50E050] transition-colors block">
               {EMAIL}
             </span>
             <span className="text-gray-500 text-xs">Click to choose your email app</span>
@@ -121,15 +126,15 @@ function EmailOptions({ compact = false }: { compact?: boolean }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(o => !o)}
-        className="group flex items-center gap-5 p-5 border border-[#1f1f1f] hover:border-[#c8ff00] transition-all duration-200 bg-[#0d0d0d] w-full text-left"
+        className="group flex items-center gap-5 p-5 border border-[#1f1f1f] hover:border-[#50E050] transition-all duration-200 bg-[#0d0d0d] w-full text-left"
       >
-        <div className="w-10 h-10 bg-[#c8ff00]/10 flex items-center justify-center shrink-0">
-          <svg className="w-5 h-5 text-[#c8ff00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-10 h-10 bg-[#50E050]/10 flex items-center justify-center shrink-0">
+          <svg className="w-5 h-5 text-[#50E050]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
         <div className="min-w-0">
-          <div className="text-white font-bold group-hover:text-[#c8ff00] transition-colors truncate">
+          <div className="text-white font-bold group-hover:text-[#50E050] transition-colors truncate">
             {EMAIL}
           </div>
           <div className="text-gray-500 text-xs mt-0.5">Orders &amp; Inquiries — choose your app</div>
@@ -172,12 +177,18 @@ function EmailOptions({ compact = false }: { compact?: boolean }) {
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const goTo = (id: string) => {
+    navigate(id === 'hero' ? '/' : `/${id}`)
+    scrollTo(id)
+  }
 
   const links = ['About', 'Feed', 'Videos', 'Gallery', 'Contact']
 
@@ -189,27 +200,27 @@ function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
         {/* Logo */}
-        <a href="#hero" className="text-xl font-black tracking-widest text-white select-none" style={HEADING}>
-          <span className="text-[#c8ff00]">WETLOOK</span>{' '}
+        <button onClick={() => goTo('hero')} className="text-xl font-black tracking-widest text-white select-none" style={HEADING}>
+          <span className="text-[#50E050]">WETLOOK</span>{' '}
           <span className="text-white">BMX</span>
-        </a>
+        </button>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-7">
           {links.map(l => (
-            <a
+            <button
               key={l}
-              href={`#${l.toLowerCase()}`}
-              className="text-xs font-bold tracking-[0.25em] text-gray-400 hover:text-[#c8ff00] transition-colors uppercase"
+              onClick={() => goTo(l.toLowerCase())}
+              className="text-xs font-bold tracking-[0.25em] text-gray-400 hover:text-[#50E050] transition-colors uppercase"
             >
               {l}
-            </a>
+            </button>
           ))}
           <a
             href={FB_PAGE}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-5 py-2 bg-[#c8ff00] text-black text-xs font-black tracking-[0.2em] uppercase hover:bg-white transition-colors"
+            className="px-5 py-2 bg-[#50E050] text-black text-xs font-black tracking-[0.2em] uppercase hover:bg-white transition-colors"
           >
             Shop Now
           </a>
@@ -233,20 +244,19 @@ function Navbar() {
       {menuOpen && (
         <div className="md:hidden bg-black/98 border-t border-[#1f1f1f] px-5 pb-6 pt-4 flex flex-col gap-4">
           {links.map(l => (
-            <a
+            <button
               key={l}
-              href={`#${l.toLowerCase()}`}
-              className="text-sm font-bold tracking-widest text-gray-300 hover:text-[#c8ff00] transition-colors uppercase"
-              onClick={() => setMenuOpen(false)}
+              onClick={() => { goTo(l.toLowerCase()); setMenuOpen(false) }}
+              className="text-sm font-bold tracking-widest text-gray-300 hover:text-[#50E050] transition-colors uppercase text-left"
             >
               {l}
-            </a>
+            </button>
           ))}
           <a
             href={FB_PAGE}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 text-center px-5 py-3 bg-[#c8ff00] text-black text-xs font-black tracking-[0.2em] uppercase"
+            className="mt-2 text-center px-5 py-3 bg-[#50E050] text-black text-xs font-black tracking-[0.2em] uppercase"
           >
             Shop Now
           </a>
@@ -258,6 +268,8 @@ function Navbar() {
 
 /* ─────────────────────────────── HERO ──────────────────────────────────── */
 function Hero() {
+  const navigate = useNavigate()
+  const goTo = (id: string) => { navigate(`/${id}`); scrollTo(id) }
   return (
     <section
       id="hero"
@@ -268,8 +280,8 @@ function Hero() {
         className="absolute inset-0 opacity-[0.035] pointer-events-none"
         style={{
           backgroundImage: `
-            repeating-linear-gradient(45deg, #c8ff00 0px, #c8ff00 1px, transparent 1px, transparent 80px),
-            repeating-linear-gradient(-45deg, #c8ff00 0px, #c8ff00 1px, transparent 1px, transparent 80px)
+            repeating-linear-gradient(45deg, #50E050 0px, #50E050 1px, transparent 1px, transparent 80px),
+            repeating-linear-gradient(-45deg, #50E050 0px, #50E050 1px, transparent 1px, transparent 80px)
           `,
         }}
       />
@@ -283,9 +295,9 @@ function Hero() {
 
       <div className="relative z-10 text-center px-5 max-w-6xl mx-auto">
         {/* Location badge */}
-        <div className="animate-fadeInUp mb-6 inline-flex items-center gap-2 border border-[#c8ff00]/40 px-4 py-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#c8ff00] inline-block" />
-          <span className="text-[#c8ff00] text-xs font-bold tracking-[0.35em] uppercase">
+        <div className="animate-fadeInUp mb-6 inline-flex items-center gap-2 border border-[#50E050]/40 px-4 py-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#50E050] inline-block" />
+          <span className="text-[#50E050] text-xs font-bold tracking-[0.35em] uppercase">
             Las Pinas, Philippines
           </span>
         </div>
@@ -299,7 +311,7 @@ function Hero() {
         </h1>
         <h2
           className="animate-fadeInUp-delay-1 text-[clamp(2.5rem,10vw,7rem)] leading-none block -mt-2"
-          style={{ ...HEADING, color: '#c8ff00' }}
+          style={{ ...HEADING, color: '#50E050' }}
         >
           BMX CLOTHING
         </h2>
@@ -311,17 +323,17 @@ function Hero() {
 
         {/* CTAs */}
         <div className="animate-fadeInUp-delay-3 mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="#feed"
-            className="px-10 py-4 bg-[#c8ff00] text-black text-xs font-black tracking-[0.25em] uppercase hover:bg-white transition-all hover:scale-105 duration-200"
+          <button
+            onClick={() => goTo('feed')}
+            className="px-10 py-4 bg-[#50E050] text-black text-xs font-black tracking-[0.25em] uppercase hover:bg-white transition-all hover:scale-105 duration-200"
           >
             See Latest Posts
-          </a>
+          </button>
           <a
             href={FB_PAGE}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-10 py-4 border-2 border-white/30 text-white text-xs font-black tracking-[0.25em] uppercase hover:border-[#c8ff00] hover:text-[#c8ff00] transition-all duration-200"
+            className="px-10 py-4 border-2 border-white/30 text-white text-xs font-black tracking-[0.25em] uppercase hover:border-[#50E050] hover:text-[#50E050] transition-all duration-200"
           >
             Follow Us →
           </a>
@@ -346,7 +358,7 @@ function Ticker() {
     'Street Sessions', 'New Drops', 'Rider Owned', 'Philippines',
   ]
   return (
-    <div className="overflow-hidden bg-[#c8ff00] py-3 select-none">
+    <div className="overflow-hidden bg-[#50E050] py-3 select-none">
       <div className="ticker-track flex gap-12 w-max whitespace-nowrap">
         {items.map((item, i) => (
           <span key={i} className="text-black text-xs font-black tracking-[0.3em] uppercase flex items-center gap-12">
@@ -372,7 +384,7 @@ function Stats() {
       <div className="max-w-5xl mx-auto px-5 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
         {stats.map(({ value, label }) => (
           <div key={label}>
-            <div className="text-5xl md:text-6xl text-[#c8ff00] font-black" style={HEADING}>
+            <div className="text-5xl md:text-6xl text-[#50E050] font-black" style={HEADING}>
               {value}
             </div>
             <div className="mt-1 text-gray-500 text-xs font-semibold tracking-[0.2em] uppercase">
@@ -393,13 +405,13 @@ function About() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           {/* Left: Heading */}
           <div>
-            <span className="text-[#c8ff00] text-xs font-bold tracking-[0.35em] uppercase">Our Story</span>
+            <span className="text-[#50E050] text-xs font-bold tracking-[0.35em] uppercase">Our Story</span>
             <h2
               className="mt-3 text-7xl md:text-8xl xl:text-9xl leading-none text-white"
               style={HEADING}
             >
               MADE BY<br />
-              <span className="text-[#c8ff00]">RIDERS</span><br />
+              <span className="text-[#50E050]">RIDERS</span><br />
               FOR<br />
               RIDERS
             </h2>
@@ -484,10 +496,10 @@ function Feed() {
         {/* Section header */}
         <div className="mb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
-            <span className="text-[#c8ff00] text-xs font-bold tracking-[0.35em] uppercase">Community</span>
+            <span className="text-[#50E050] text-xs font-bold tracking-[0.35em] uppercase">Community</span>
             <h2 className="mt-2 text-6xl md:text-8xl leading-none text-white" style={HEADING}>
               LATEST FROM<br />
-              THE <span className="text-[#c8ff00]">CREW</span>
+              THE <span className="text-[#50E050]">CREW</span>
             </h2>
           </div>
           <p className="text-gray-500 max-w-xs text-sm leading-relaxed">
@@ -507,7 +519,7 @@ function Feed() {
             href={FB_PAGE}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-[#c8ff00] text-xs font-black tracking-[0.25em] uppercase hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-[#50E050] text-xs font-black tracking-[0.25em] uppercase hover:text-white transition-colors"
           >
             View All Posts on Facebook
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -534,9 +546,9 @@ function Videos() {
       <div className="max-w-7xl mx-auto px-5">
         {/* Section header */}
         <div className="mb-14">
-          <span className="text-[#c8ff00] text-xs font-bold tracking-[0.35em] uppercase">Action</span>
+          <span className="text-[#50E050] text-xs font-bold tracking-[0.35em] uppercase">Action</span>
           <h2 className="mt-2 text-6xl md:text-8xl leading-none text-white" style={HEADING}>
-            REELS &amp; <span className="text-[#c8ff00]">VIDEOS</span>
+            REELS &amp; <span className="text-[#50E050]">VIDEOS</span>
           </h2>
           <p className="mt-4 text-gray-500 max-w-lg text-sm leading-relaxed">
             Watch our riders in action. Catch the latest reels, session edits, and product drops.
@@ -547,7 +559,7 @@ function Videos() {
           {/* Left: Embedded feed */}
           <div className="bg-[#131313] border border-[#1f1f1f]">
             <div className="px-5 py-4 border-b border-[#1f1f1f] flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#c8ff00]" />
+              <div className="w-2 h-2 rounded-full bg-[#50E050]" />
               <span className="text-white text-xs font-black tracking-[0.2em] uppercase" style={HEADING}>
                 Live Facebook Feed
               </span>
@@ -574,11 +586,11 @@ function Videos() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex flex-col gap-2 p-4 bg-[#0a0a0a] border border-[#2a2a2a] hover:border-[#c8ff00] transition-all duration-200"
+                    className="group flex flex-col gap-2 p-4 bg-[#0a0a0a] border border-[#2a2a2a] hover:border-[#50E050] transition-all duration-200"
                   >
                     <span className="text-2xl">{icon}</span>
                     <span
-                      className="text-white font-black text-base group-hover:text-[#c8ff00] transition-colors"
+                      className="text-white font-black text-base group-hover:text-[#50E050] transition-colors"
                       style={HEADING}
                     >
                       {label}
@@ -590,7 +602,7 @@ function Videos() {
             </div>
 
             {/* CTA block */}
-            <div className="bg-[#c8ff00] p-7">
+            <div className="bg-[#50E050] p-7">
               <p className="text-black text-xs font-bold tracking-[0.3em] uppercase mb-1">Don't Miss a Drop</p>
               <h3 className="text-black text-3xl font-black leading-tight mb-3" style={HEADING}>
                 FOLLOW FOR DAILY CONTENT
@@ -603,7 +615,7 @@ function Videos() {
                   href={FB_PAGE}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 bg-black text-[#c8ff00] text-xs font-black tracking-[0.2em] uppercase hover:bg-[#111] transition-colors"
+                  className="px-6 py-3 bg-black text-[#50E050] text-xs font-black tracking-[0.2em] uppercase hover:bg-[#111] transition-colors"
                 >
                   Like Our Page
                 </a>
@@ -633,7 +645,7 @@ function Gallery() {
       href: `${FB_PAGE}/photos/`,
       cta: 'View Photos →',
       bg: '#111',
-      accent: '#c8ff00',
+      accent: '#50E050',
     },
     {
       title: 'Session Edits',
@@ -657,9 +669,9 @@ function Gallery() {
     <section id="gallery" className="py-24 bg-[#080808]">
       <div className="max-w-7xl mx-auto px-5">
         <div className="mb-14">
-          <span className="text-[#c8ff00] text-xs font-bold tracking-[0.35em] uppercase">Gallery</span>
+          <span className="text-[#50E050] text-xs font-bold tracking-[0.35em] uppercase">Gallery</span>
           <h2 className="mt-2 text-6xl md:text-8xl leading-none text-white" style={HEADING}>
-            PHOTOS &amp; <span className="text-[#c8ff00]">MEDIA</span>
+            PHOTOS &amp; <span className="text-[#50E050]">MEDIA</span>
           </h2>
           <p className="mt-4 text-gray-500 max-w-lg text-sm leading-relaxed">
             All our media lives on Facebook and Instagram. Tap any category below to browse the full collection.
@@ -713,13 +725,13 @@ function Contact() {
         <div className="grid md:grid-cols-2 gap-16 items-start">
           {/* Left */}
           <div>
-            <span className="text-[#c8ff00] text-xs font-bold tracking-[0.35em] uppercase">Get In Touch</span>
+            <span className="text-[#50E050] text-xs font-bold tracking-[0.35em] uppercase">Get In Touch</span>
             <h2
               className="mt-2 text-7xl md:text-9xl leading-none text-white"
               style={HEADING}
             >
               CONTACT<br />
-              <span className="text-[#c8ff00]">US</span>
+              <span className="text-[#50E050]">US</span>
             </h2>
             <p className="mt-6 text-gray-400 text-lg leading-relaxed max-w-md">
               For orders, reservations, and inquiries — hit us up. Ride. Sweat. Chill. That's how we do it, and we'll get back to you fast.
@@ -731,7 +743,7 @@ function Contact() {
               {/* Location */}
               <div className="flex items-center gap-4">
                 <div className="w-11 h-11 bg-[#1a1a1a] border border-[#2a2a2a] flex items-center justify-center shrink-0">
-                  <svg className="w-5 h-5 text-[#c8ff00]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-[#50E050]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -816,7 +828,7 @@ function Footer() {
     <footer className="bg-black border-t border-[#161616] py-8">
       <div className="max-w-7xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="text-xl font-black text-white" style={HEADING}>
-          <span className="text-[#c8ff00]">WETLOOK</span> BMX CLOTHING
+          <span className="text-[#50E050]">WETLOOK</span> BMX CLOTHING
         </div>
         <p className="text-gray-700 text-xs tracking-widest uppercase text-center">
           Ride. Sweat. Chill. · Las Pinas, Philippines
@@ -830,7 +842,15 @@ function Footer() {
 }
 
 /* ─────────────────────────────── APP ───────────────────────────────────── */
-export default function App() {
+function HomePage() {
+  const { section } = useParams<{ section?: string }>()
+
+  useEffect(() => {
+    const id = section ?? 'hero'
+    const t = setTimeout(() => scrollTo(id), 50)
+    return () => clearTimeout(t)
+  }, [section])
+
   return (
     <div className="bg-[#080808] text-white" style={{ fontFamily: "'Inter', sans-serif" }}>
       <Navbar />
@@ -844,5 +864,13 @@ export default function App() {
       <Contact />
       <Footer />
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/:section?" element={<HomePage />} />
+    </Routes>
   )
 }
